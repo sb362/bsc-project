@@ -217,7 +217,7 @@
     \null\vfil
     \vskip 60\p@
     \begin{center}
-	  {\includegraphics[width=0.3\textwidth]{uos-logo}\par}
+    {\includegraphics[width=0.3\textwidth]{uos-logo}\par}
       \setlength{\parskip}{0pt}
       {\scshape\LARGE\textbf{\univname}\par}
       \bigskip
@@ -233,7 +233,7 @@
       \ifthenelse{\equal{\volno}{}}
       {}
       {\smallskip Volume \volno{} of \volof}
-	  \ifthenelse{\equal{\moduleid}{}}
+   \ifthenelse{\equal{\moduleid}{}}
       {}
       {\smallskip Module: \moduleid}
       \vfill

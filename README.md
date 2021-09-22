@@ -10,5 +10,5 @@ Both the report and article were adapted from templates provided by the Universi
 
 ## To-do
 #### Typesetting
-- Fix indentation in TeX files. Currently, tabs and spaces are mixed.
+- Cleanup .cls files
 - Use ifthenelse for deptname, facname, etc.

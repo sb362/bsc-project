@@ -49,8 +49,9 @@
 \newcommand\bhrule{\typeout{------------------------------------------------------------------------------}}
 \newcommand\btypeout[1]{\bhrule\typeout{\space #1}\bhrule}
 %% \usepackage[T1]{fontspec}
-\usepackage[defaultsans]{droidsans}
-\usepackage{mathpazo}
+%\usepackage[defaultsans]{droidsans}
+%\usepackage{mathpazo}
+\usepackage{newpxtext,newpxmath}
 %%\usepackage[T1]{fontenc} %This may not be necessary for english only text
 
 \usepackage{setspace}
@@ -100,18 +101,16 @@
 \if@twocolumn\hbox{}\newpage\fi\fi\fi}
 %% -------------------- Figure/Table/Eq/Listing Stying --------------------
 %% Set the styling for non text elements of the document
-\usepackage{amsmath,amsfonts,amssymb,amscd,amsthm,xspace}
-\theoremstyle{plain}
+\usepackage{mathtools,xspace}
 \newtheorem{example}{Example}[section]
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{axiom}[theorem]{Axiom}
-\theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
-\theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
+
 \usepackage[justification=centerlast,font=small,labelfont=sc]{caption}
 \setlength{\captionmargin}{20pt}
 \newcommand{\fref}[1]{Figure~\ref{#1}}

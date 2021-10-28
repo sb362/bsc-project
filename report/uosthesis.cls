@@ -43,7 +43,7 @@
   \if@tempswa \else \PassOptionsToClass{#1}{\baseclass}\fi
 }
 \@checkoptions{11pt}{{10pt}{11pt}{12pt}}
-\PassOptionsToClass{a4paper}{\baseclass}
+\PassOptionsToClass{a4paper,oneside}{\baseclass}
 \ProcessOptions\relax
 \LoadClass{\baseclass}
 \newcommand\bhrule{\typeout{------------------------------------------------------------------------------}}
@@ -56,7 +56,6 @@
 \usepackage[defaultsans]{droidsans}
 \usepackage{mathpazo}
 %%\usepackage[T1]{fontenc} %This may not be necessary for english only text
-
 \usepackage{setspace}
 \onehalfspacing
 \setlength{\parindent}{0pt}

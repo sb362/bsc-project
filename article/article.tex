@@ -30,11 +30,10 @@
 % Fancy header/footer
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection . #1}}
 \fancyhf{}
-\rhead{\fancyplain{}{}} % predefined ()
-\lhead{\fancyplain{}{\rightmark}} % 1. sectionname, 1.1 subsection name etc
-\cfoot{\fancyplain{}{\thepage}}
+\lhead{\fancyplain{}{\thepage}}
+\rhead{\fancyplain{}{\textit{\rightmark}}}
 
 % Bibliography
 \usepackage[backend=biber, style=phys, natbib=true,

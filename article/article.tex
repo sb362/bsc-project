@@ -12,25 +12,29 @@
 \defaultfontfeatures{Scale=MatchLowercase, Ligatures=TeX}
 
 \usepackage{url}
-\usepackage{hyperref}  % Links
+\usepackage[pdfusetitle]{hyperref}
 \usepackage{titlesec}  % Modify title/section/chapter commands
-\usepackage{mathtools} % 
+\usepackage{mathtools} % Various maths related commands
 \usepackage{gensymb}   % \degree symbol
-
 \usepackage{booktabs}  % \toprule, etc., in tables
 
-\usepackage{caption}   % Caption figures
+% Caption figures
+\usepackage{caption}
 \DeclareCaptionFont{captionlabelfont}{\bfseries \sffamily}
 \DeclareCaptionFont{captiontextfont}{\sffamily}
 \captionsetup{labelfont=captionlabelfont, textfont=captiontextfont}
 
-\usepackage{fancyhdr}  % Fancy header/footer
-\pagestyle{fancy}
-\fancyhf{}
-\fancyfoot[C]{\thepage}
-%\renewcommand{\headrulewidth}{0pt}
+% Change footnote style
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
-\renewcommand{\thefootnote}{\fnsymbol{footnote}} % Change footnote style
+% Fancy header/footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyhf{}
+\rhead{\fancyplain{}{}} % predefined ()
+\lhead{\fancyplain{}{\rightmark}} % 1. sectionname, 1.1 subsection name etc
+\cfoot{\fancyplain{}{\thepage}}
 
 % Bibliography
 \usepackage[backend=biber, style=phys, natbib=true,
@@ -38,38 +42,39 @@
 			autocite=superscript]{biblatex}
 \addbibresource{references.bib}
 
-%\department  {School of Physics and Astronomy}
-\title       {Pre-Project Review}
-%\modulename  {PH4111}
-%\authors     {180014855}
-%\date        {\today}
+\newcommand\mytitle    {Millimetre-Wave Cloud Profiling Radar}
+\newcommand\mysubtitle {Pre-Project Review}
+\newcommand\myauthor   {180014855}
+\newcommand\mydate     {\today}
+\newcommand\mymodule   {PH4111}
+\newcommand\mywordcount{2000}
+
+\title {\mytitle}
+\author{\myauthor}
+\date  {\mydate}
 
 \begin{document}
 
 \begin{titlepage}
 	\centering
 	{\includegraphics[width=0.3\textwidth]{uos-logo}}
-	\par\vspace{1cm}
-	{\LARGE University of St. Andrews\par}
-	\vspace{1cm}
-	{\Large Final year project\par}
+	\par
+	{\LARGE\bfseries University of St. Andrews\par}
+	{\LARGE School of Physics and Astronomy\par}
 	\vspace{1.5cm}
-	{\huge\bfseries Millimetre-wave cloud profiling radar\par}
-	{\huge\bfseries Pre-Project Review\par}
+	{\huge\bfseries\mytitle\par}
+	{\Large\mysubtitle\par}
 	\vspace{2cm}
-	{\Large 180014855\par}
-	{\small Word count: 2000\par}
-	{\small Module: PH4111}
+	{\Large\myauthor\par}
+	{\large\textbf{Module:} \mymodule\par}
+	{\large\textbf{Word count:} \mywordcount\par}
 	\vfill
-
-	{\large \today\par}
+	{\large\today\par}
 \end{titlepage}
 
 \begin{abstract}
 This work is about \dots
 \end{abstract}
-
-%\mainmatter
 
 \section{Introduction} \label{sec:Introduction}
 Why millimetre waves?
@@ -104,6 +109,5 @@ Discuss the rationale behind this project.
 \section{Conclusions} \label{sec:Conclusions}
 
 
-%\backmatter
 \printbibliography
 \end{document}

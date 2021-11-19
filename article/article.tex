@@ -1,9 +1,17 @@
 \documentclass[sotoncolour]{uosarticle}
 \graphicspath{{../figures/}}
-\usepackage[round]{natbib}
 \hypersetup{colorlinks=true}
 
-\usepackage{blindtext} % todo: removeme
+\usepackage[
+    backend=biber,
+    style=phys,
+    natbib=true,
+    url=false, 
+    doi=false,
+    eprint=false,
+    autocite=superscript
+]{biblatex}
+\addbibresource{references.bib}
 
 \department  {School of Physics and Astronomy}
 \title       {Pre-Project Review}
@@ -21,54 +29,23 @@ This work is about \dots
 \mainmatter
 
 \section{Introduction} \label{sec:Introduction}
-\blindtext[2]
-		\[{\frac{d}{dx}} \int _{a}^{b} f(x,t)\,dt = f{\big (}x, b{\big )} \cdot {\frac {db}{dx}} - f{\big (}x, a{\big )} \cdot {\frac{da}{dx}} + \int _{a}^{b}{\frac{\partial}{\partial x}} f(x,t)\,dt\]
-		assuming \(-\infty < a(x)\) and \(b(x) < \infty\).
-\blindtext[1]
-\begin{equation}\label{eqn:test}
-		\int_{-\infty}^{\infty} f(x)\,dx = \int_{-\infty}^{\infty} f(|\alpha| x - \sum_{i}\frac{\gamma_i}{x - \beta_i})\,dx
-\end{equation}
-	Equation \ref{eqn:test} holds for arbitrary \(\alpha\), \(\gamma_i\), \(\beta_i\).
-\blindtext[1]
+Why millimetre waves?
+Mention the meteorological radar range equation.
+Brief mention of Rayleigh scattering.
+The meteorological radar range equation, derived by Probert-Jones in 1962, is\supercite{ProbertJones}
 \begin{equation}
-	\int_{0}^{\infty} x^b e^{-a x} dx = \frac{\Gamma(b+1)}{a^{b+1}}
+	y = m x + c\label{eqn:MeteoRange}
 \end{equation}
-\begin{equation}
-	\int_{0}^{\infty} \frac{x^t}{e^x - 1} \frac{dx}{x} = \zeta(t) \gamma(t)
-\end{equation}
-\blindtext[1]
+
+\section{Pulse Doppler radar} \label{sec:PulseDopperRadar}
+
+\section{Continuous wave radar} \label{sec:CWR}
+
+\section{Frequency-modulated continuous wave radar} \label{sec:FMCWR}
 
 \section{Conclusions} \label{sec:Conclusions}
-Draw conclusions here.
-\blindtext[4]
-\begin{table}
-\begin{tabular}{c|c|c|c|c|c|c|c}
-    {$m$} & {$\Re\{\underline{\mathfrak{X}}(m)\}$} & {$-\Im\{\underline{\mathfrak{X}}(m)\}$} & {$\mathfrak{X}(m)$} & {$\frac{\mathfrak{X}(m)}{23}$} & {$A_m$} & {$\varphi(m)\ /\ ^{\circ}$} & {$\varphi_m\ /\ ^{\circ}$} \\ \toprule
-    1  & 16.128 & +8.872 & 16.128 & 1.402 & 1.373 & -146.6 & -137.6 \\
-    2  & 3.442  & -2.509 & 3.442  & 0.299 & 0.343 & 133.2  & 152.4  \\
-    3  & 1.826  & -0.363 & 1.826  & 0.159 & 0.119 & 168.5  & -161.1 \\
-    4  & 0.993  & -0.429 & 0.993  & 0.086 & 0.08  & 25.6   & 90     \\
-    5  & 1.29   & +0.099 & 1.29   & 0.112 & 0.097 & -175.6 & -114.7 \\
-    6  & 0.483  & -0.183 & 0.483  & 0.042 & 0.063 & 22.3   & 122.5  \\
-    7  & 0.766  & -0.475 & 0.766  & 0.067 & 0.039 & 141.6  & -122   \\
-    8  & 0.624  & +0.365 & 0.624  & 0.054 & 0.04  & -35.7  & 90     \\
-    9  & 0.641  & -0.466 & 0.641  & 0.056 & 0.045 & 133.3  & -106.3 \\
-    10 & 0.45   & +0.421 & 0.45   & 0.039 & 0.034 & -69.4  & 110.9  \\
-    11 & 0.598  & -0.597 & 0.598  & 0.052 & 0.025 & 92.3   & -109.3 \\
-\end{tabular}
-\caption{\label{tbl:test}Insert table caption here.}
-\end{table}
 
-\blindtext[3]
-
-\acknowledgements{Thanks to ...}
 
 \backmatter
-\appendix
-\bibliographystyle{plainnat}
-\bibliography{references}
-%% ----------------------------------------------------------------
-\section{Stuff} \label{Section:Stuff}
-Insert stuff here.
+\printbibliography
 \end{document}
-%% ----------------------------------------------------------------

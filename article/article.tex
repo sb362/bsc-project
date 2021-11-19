@@ -1,32 +1,79 @@
-\documentclass[sotoncolour]{uosarticle}
-\graphicspath{{../figures/}}
-\hypersetup{colorlinks=true}
+\documentclass{article}
 
-\usepackage[
-    backend=biber,
-    style=phys,
-    natbib=true,
-    url=false, 
-    doi=false,
-    eprint=false,
-    autocite=superscript
-]{biblatex}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage[onehalfspacing]{setspace} % Correct 1.5 line spacing
+
+\usepackage{graphicx}  % Figures
+\graphicspath{{../figures/}}
+
+\usepackage{fontspec}  % Fonts
+\usepackage{helvet}
+\usepackage{newpxtext,newpxmath}
+\defaultfontfeatures{Scale=MatchLowercase, Ligatures=TeX}
+
+\usepackage{url}
+\usepackage[pdfusetitle]{hyperref}
+\usepackage{titlesec}  % Modify title/section/chapter commands
+\usepackage{mathtools} % Various maths related commands
+\usepackage{gensymb}   % \degree symbol
+\usepackage{booktabs}  % \toprule, etc., in tables
+
+% Caption figures
+\usepackage{caption}
+\DeclareCaptionFont{captionlabelfont}{\bfseries \sffamily}
+\DeclareCaptionFont{captiontextfont}{\sffamily}
+\captionsetup{labelfont=captionlabelfont, textfont=captiontextfont}
+
+% Change footnote style
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+% Fancy header/footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markright{\thesection . #1}}
+\fancyhf{}
+\lhead{\fancyplain{}{\thepage}}
+\rhead{\fancyplain{}{\textit{\rightmark}}}
+
+% Bibliography
+\usepackage[backend=biber, style=phys, natbib=true,
+			url=false, doi=false, eprint=false,
+			autocite=superscript]{biblatex}
 \addbibresource{references.bib}
 
-\department  {School of Physics and Astronomy}
-\title       {Pre-Project Review}
-\modulename  {PH4111}
-\authors     {180014855}
-\date        {\today}
+\newcommand\mytitle    {Millimetre-Wave Cloud Profiling Radar}
+\newcommand\mysubtitle {Pre-Project Review}
+\newcommand\myauthor   {180014855}
+\newcommand\mydate     {\today}
+\newcommand\mymodule   {PH4111}
+\newcommand\mywordcount{2000}
+
+\title {\mytitle}
+\author{\myauthor}
+\date  {\mydate}
 
 \begin{document}
-\frontmatter
-\maketitle
+
+\begin{titlepage}
+	\centering
+	{\includegraphics[width=0.3\textwidth]{uos-logo}}
+	\par
+	{\LARGE\bfseries University of St. Andrews\par}
+	{\LARGE School of Physics and Astronomy\par}
+	\vspace{1.5cm}
+	{\huge\bfseries\mytitle\par}
+	{\Large\mysubtitle\par}
+	\vspace{2cm}
+	{\Large\myauthor\par}
+	{\large\textbf{Module:} \mymodule\par}
+	{\large\textbf{Word count:} \mywordcount\par}
+	\vfill
+	{\large\today\par}
+\end{titlepage}
+
 \begin{abstract}
 This work is about \dots
 \end{abstract}
-
-\mainmatter
 
 \section{Introduction} \label{sec:Introduction}
 Why millimetre waves?
@@ -61,6 +108,5 @@ Discuss the rationale behind this project.
 \section{Conclusions} \label{sec:Conclusions}
 
 
-\backmatter
 \printbibliography
 \end{document}

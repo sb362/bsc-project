@@ -1,32 +1,75 @@
-\documentclass[sotoncolour]{uosarticle}
-\graphicspath{{../figures/}}
-\hypersetup{colorlinks=true}
+\documentclass{article}
 
-\usepackage[
-    backend=biber,
-    style=phys,
-    natbib=true,
-    url=false, 
-    doi=false,
-    eprint=false,
-    autocite=superscript
-]{biblatex}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage[onehalfspacing]{setspace} % Correct 1.5 line spacing
+
+\usepackage{graphicx}  % Figures
+\graphicspath{{../figures/}}
+
+\usepackage{fontspec}  % Fonts
+\usepackage{helvet}
+\usepackage{newpxtext,newpxmath}
+\defaultfontfeatures{Scale=MatchLowercase, Ligatures=TeX}
+
+\usepackage{url}
+\usepackage{hyperref}  % Links
+\usepackage{titlesec}  % Modify title/section/chapter commands
+\usepackage{mathtools} % 
+\usepackage{gensymb}   % \degree symbol
+
+\usepackage{booktabs}  % \toprule, etc., in tables
+
+\usepackage{caption}   % Caption figures
+\DeclareCaptionFont{captionlabelfont}{\bfseries \sffamily}
+\DeclareCaptionFont{captiontextfont}{\sffamily}
+\captionsetup{labelfont=captionlabelfont, textfont=captiontextfont}
+
+\usepackage{fancyhdr}  % Fancy header/footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+%\renewcommand{\headrulewidth}{0pt}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}} % Change footnote style
+
+% Bibliography
+\usepackage[backend=biber, style=phys, natbib=true,
+			url=false, doi=false, eprint=false,
+			autocite=superscript]{biblatex}
 \addbibresource{references.bib}
 
-\department  {School of Physics and Astronomy}
+%\department  {School of Physics and Astronomy}
 \title       {Pre-Project Review}
-\modulename  {PH4111}
-\authors     {180014855}
-\date        {\today}
+%\modulename  {PH4111}
+%\authors     {180014855}
+%\date        {\today}
 
 \begin{document}
-\frontmatter
-\maketitle
+
+\begin{titlepage}
+	\centering
+	{\includegraphics[width=0.3\textwidth]{uos-logo}}
+	\par\vspace{1cm}
+	{\LARGE University of St. Andrews\par}
+	\vspace{1cm}
+	{\Large Final year project\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Millimetre-wave cloud profiling radar\par}
+	{\huge\bfseries Pre-Project Review\par}
+	\vspace{2cm}
+	{\Large 180014855\par}
+	{\small Word count: 2000\par}
+	{\small Module: PH4111}
+	\vfill
+
+	{\large \today\par}
+\end{titlepage}
+
 \begin{abstract}
 This work is about \dots
 \end{abstract}
 
-\mainmatter
+%\mainmatter
 
 \section{Introduction} \label{sec:Introduction}
 Why millimetre waves?
@@ -61,6 +104,6 @@ Discuss the rationale behind this project.
 \section{Conclusions} \label{sec:Conclusions}
 
 
-\backmatter
+%\backmatter
 \printbibliography
 \end{document}

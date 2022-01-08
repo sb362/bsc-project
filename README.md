@@ -6,9 +6,4 @@
 - `figures/`: Figures used by both the pre-project review and project report.
 
 ## Typesetting
-Both the report and article were adapted from templates provided by the University of Southhampton. Please see their [Git repository](https://git.soton.ac.uk/el7g15/uos-latex-template) or [Overleaf page](https://www.overleaf.com/edu/southampton) to view the original templates.
-
-## To-do
-#### Typesetting
-- Cleanup .cls files
-- Use ifthenelse for deptname, facname, etc.
+The report was adapted from templates provided by the University of Southhampton. Please see their [Git repository](https://git.soton.ac.uk/el7g15/uos-latex-template) or [Overleaf page](https://www.overleaf.com/edu/southampton) to view the original templates.

@@ -3,10 +3,41 @@
 	booktitle = {Principles of Modern Radar},
 	volume = {1},
 	date = {2010},
-	edition = {3rd ed.},
+	edition = {1st ed.},
 	author = {John F. Shaeffer},
 	title = {Target Reflectivity},
-	chapter = {6}
+	chapter = {6},
+	isbn = {978-1-891121-52-4},
+	pages = {219--227},
+	publisher = {Scitech Publishing}
+}
+
+@incollection{POMRNonCoherentAveraging,
+	editor = {Mark A. Richards and James A. Scheer and William A. Holm},
+	booktitle = {Principles of Modern Radar},
+	volume = {1},
+	date = {2010},
+	edition = {1st ed.},
+	author = {Mark A. Richards},
+	title = {Digital Signal Processing Fundamentals for Radar},
+	chapter = {14},
+	isbn = {978-1-891121-52-4},
+	pages = {536--538},
+	publisher = {Scitech Publishing}
+}
+
+@incollection{POMRDopplerProcessing,
+	editor = {Mark A. Richards and James A. Scheer and William A. Holm},
+	booktitle = {Principles of Modern Radar},
+	volume = {1},
+	date = {2010},
+	edition = {1st ed.},
+	author = {Mark A. Richards},
+	title = {Doppler Processing},
+	chapter = {17},
+	isbn = {978-1-891121-52-4},
+	pages = {625--673},
+	publisher = {Scitech Publishing}
 }
 
 @incollection{RadarHandbookMeteo,
@@ -16,7 +47,10 @@
 	edition = {3rd ed.},
 	author = {R. Jeffery Keeler and Robert J. Serafin},
 	title = {Meterological Radar},
-	chapter = {19}
+	chapter = {19},
+	publisher = {McGraw-Hill},
+	isbn = {978-0-07-148547-0},
+	pages = {19.3--19.15}
 }
 
 @book{RadarMeteorology,
@@ -24,15 +58,37 @@
 	title = {Radar Meteorology},
 	date = {1992},
 	chapter = {2},
-	pages = {111--123}
+	pages = {111--123},
+	publisher = {Artech House},
+	isbn = {0-89006-318-4}
+}
+
+@book{FirstCourse,
+	author = {Robert M. Rauber and Stephen W. Nesbitt},
+	title = {Radar Meteorology: A First Course},
+	date = {2018},
+	chapter = {5},
+	edition = {1st ed.},
+	publisher = {John Wiley and Sons},
+	isbn = {978-1-118-43262-4},
+	pages = {89--100}
+}
+
+@online{TIFMCWDoppler,
+	title = {The fundamentals of millimeter wave radar sensors},
+	author = {Cesar Iovescu and Sandeep Rao},
+	organization = {TI Instruments},
+	url = {https://www.ti.com/lit/wp/spyy005a/spyy005a.pdf},
+	urldate = {2022-01-20}
 }
 
 @article{ProbertJones,
 	author = {J. R. Probert-Jones},
 	title = {The radar equation in meteorology},
 	journal = {Quarterly Journal of the Royal Meteorological Society},
-	date = {1962},
 	volume = {88},
+	number = {378},
+	date = {1962},
 	pages = {485--495},
 	doi = {10.1002/qj.49708837810}
 }
@@ -55,31 +111,43 @@
 	volume = {88},
 	number = {10},
 	doi = {10.1175/BAMS-88-10-1608},
-	pages = {1608 -- 1624}
+	pages = {1608--1624}
 }
 
 @online{CloudTypes,
 	title = {Cloud Classification},
 	organization = {Centre for Atmospheric Science, University of Manchester},
-	url = {http://cas.manchester.ac.uk/resactivities/cloudphysics/background/classification},
+	url = {http://cas.manchester.ac.uk/resactivities/cloudphysics/background/classification/},
 	urldate = {2022-01-08}
 }
 
-@thesis{GorkaReflectivity,
+@phdthesis{Gorka,
 	author = {Gorka Rubio Cidre},
 	title = {Technological Developments for Millimetre-Wave Radars},
 	institution = {Universidad Politecnica de Madrid},
 	date = {2017},
 	chapter = {3},
-	pages = {85--93}
+	pages = {85--95}
 }
 
-@thesis{ComplexIndexOfRefraction,
+@mastersthesis{ComplexIndexOfRefraction,
 	author = {David J. Segelstein},
 	title = {The complex refractive index of water},
+	institution = {University of Missouri--Kansas City},
 	date = {1981},
 	chapter = {5},
 	pages = {116--161}
+}
+
+@inproceedings{StAndrewsRadar,
+	author = {Duncan A. Robertson and Robert I. Hunter},
+	title = {A solid state {94 GHz FMCW Doppler} radar demonstrator for cloud profiling},
+	volume = {10188},
+	booktitle = {{Radar Sensor Technology XXI}},
+	publisher = {{Proc. SPIE}},
+	pages = {345--351},
+	date = {2017},
+	doi = {10.1117/12.2261871}
 }
 
 @article{BASTA,
@@ -87,7 +155,7 @@
 	title = {{BASTA}: A {95-GHz FMCW Doppler} Radar for Cloud and Fog Studies},
 	journal = {Journal of Atmospheric and Oceanic Technology},
 	volume = {33},
-	issue = {5},
+	number = {5},
 	date = {2016},
 	pages = {1023--1038},
 	doi = {10.1175/JTECH-D-15-0104.1}
@@ -97,24 +165,28 @@
 	author = {P. G. Huggard and M. L. Oldfield and B. P. Moyna and B. N. Ellison and D. N. Matheson and A. J. Bennett and C. Gaffard and T. Oakley and J. Nash},
 	title = {{94 GHz FMCW cloud radar}},
 	volume = {7117},
-	booktitle = {{Proc. SPIE}},
-	booksubtitle = {Millimetre Wave and Terahertz Sensors and Technology},
+	booktitle = {{Millimetre Wave and Terahertz Sensors and Technology}},
 	publisher = {{Proc. SPIE}},
 	pages = {16--21},
 	date = {2008},
 	doi = {10.1117/12.800347}
 }
 
-@inproceedings{StAndrewsRadar,
-	author = {Duncan A. Robertson and Robert I. Hunter},
-	title = {A solid state {94 GHz FMCW Doppler} radar demonstrator for cloud profiling},
-	volume = {10188},
-	booktitle = {{Proc. SPIE}},
-	booksubtitle = {{Radar Sensor Technology XXI}},
-	publisher = {{Proc. SPIE}},
-	pages = {345--351},
-	date = {2017},
-	doi = {10.1117/12.2261871}
+@online{Galileo,
+	title = {Technical description of the {Chibolton Galileo} radar},
+	url = {https://www.chilbolton.stfc.ac.uk/Pages/Galileo.pdf},
+	urldate = {2022-01-17},
+	organization = {Science and Technology Facilities Council, Chilbolton Observatory},
+	notes = {Cites a 1999 paper which I could not find.}
+}
+
+@inproceedings{Chiba,
+	author = {Jun Yamaguchi and Toshiaki Takano and Teruyuki Nakajima and Tamio Takamura and Hiroshi Kumagai and Yuichi Ohno and Yuji Nakanishi and Kenichi Akita and Youhei Kawamura and Hideji AbeKenichi Futaba and Shinichi Yokote},
+	booktitle = {{2006 Asia-Pacific Microwave Conference}},
+	title = {Sensitivity of {FMCW 95GHz} cloud radar for high clouds},
+	date = {2006},
+	pages = {1841--1846},
+	doi = {10.1109/APMC.2006.4429767}
 }
 
 @article{ARMRadarNetwork,
@@ -122,12 +194,12 @@
 	title = {The {ARM} Radar Network: At the Leading Edge of Cloud and Precipitation Observations},
 	journal = {Bulletin of the American Meteorological Society},
 	volume = {101},
-	issue = {5},
+	number = {5},
 	date = {2020},
 	doi = {10.1175/BAMS-D-18-0288.1}
 }
 
-@thesis{Cassidy,
+@phdthesis{Cassidy,
 	title = {Millimetre-wave {FMCW} radar for remote sensing and security applications},
 	author = {Scott L. Cassidy},
 	institution = {University of St Andrews},
@@ -139,6 +211,63 @@
 @online{NetCDFFormat,
 	title = {{Network Common Data Form (NetCDF)}},
 	url = {https://www.unidata.ucar.edu/software/netcdf/},
-	organization = {University Corporation for Atmospheric Research},
-	urldate = {2022-01-02}
+	urldate = {2022-01-02},
+	organization = {University Corporation for Atmospheric Research}
+}
+
+@online{StAndrewsRadarImage,
+	title = {Cloud radar},
+	organization = {Millimetre-Wave and EPR Group, University of St Andrews},
+	url = {https://mmwave.wp.st-andrews.ac.uk/radar/cloud-radar/},
+	urldate = {2022-01-19}
+}
+
+@online{RPG,
+	title = {{94 GHz FMCW Doppler} Cloud Radar},
+	url = {https://www.radiometer-physics.de/products/microwave-remote-sensing-instruments/94-ghz-fmcw-doppler-cloud-radar},
+	organization = {Radiometer Physics},
+	urldate = {2022-01-07}
+}
+
+@article{RPGPaper,
+	author = {Nils Küchler and Stefan Kneifel and Ulrich Löhnert and Pavlos Kollias and Harald Czekala and Thomas Rose},
+	title = {A {W}-Band Radar–Radiometer System for Accurate and Continuous Monitoring of Clouds and Precipitation},
+	journal = {Journal of Atmospheric and Oceanic Technology},
+	volume = {34},
+	number = {11},
+	date = {2017},
+	pages = {2375--2392},
+	doi = {10.1175/JTECH-D-17-0019.1}
+}
+
+@article{Illingworth,
+	author = {A. J. Illingworth and D. Cimini and C. Gaffard and M. Haeffelin and V. Lehmann and U. Löhnert and E. J. O’Connor and D. Ruffieux},
+	title = {Exploiting Existing Ground-Based Remote Sensing Networks to Improve High-Resolution Weather Forecasts},
+	journal = {Bulletin of the American Meteorological Society},
+	volume = {96},
+	number = {12},
+	date = {2015},
+	pages = {2107--2125},
+	doi = {10.1175/BAMS-D-13-00283.1}
+}
+
+@article{DopplerMoments,
+	author = {Gerald G. Mace and Andrew J. Heymsfield and Michael R. Poellot},
+	title = {On retrieving the microphysical properties of cirrus clouds using the moments of the millimeter-wavelength Doppler spectrum},
+	journal = {Journal of Geophysical Research},
+	volume = {107},
+	number = {D24},
+	date = {2002},
+	doi = {10.1029/2001JD001308}
+}
+
+@article{CloudSize,
+	author = {Natasha L. Miles and Johannes Verlinde and Eugene E. Clothiaux},
+	title = {Cloud Droplet Size Distributions in Low-Level Stratiform Clouds},
+	journal = {Journal of the Atmospheric Sciences},
+	volume = {57},
+	number = {2},
+	date = {2000},
+	pages = {295--311},
+	doi = {10.1175/1520-0469(2000)057<0295:CDSDIL>2.0.CO;2}
 }

@@ -1,3 +1,9 @@
+##
+*.ist
+*.slg
+*.slo
+*.sls
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

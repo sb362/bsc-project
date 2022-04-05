@@ -21,6 +21,9 @@
 \usepackage{newpxtext,newpxmath}
 \defaultfontfeatures{Scale=MatchLowercase, Ligatures=TeX}
 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
 % SI units
 \usepackage{siunitx}
 \sisetup{separate-uncertainty=true,number-mode=text,detect-weight=true}
@@ -95,7 +98,7 @@
 %\usepackage[acronym,nonumberlist]{glossaries}
 %\usepackage[acronym,nonumberlist]{glossaries-extra}
 
-\usepackage[nopostdot, toc, nogroupskip, nomain, indexonlyfirst, acronym, symbols, style=long4col, stylemods={longextra}, nonumberlist]{glossaries-extra}
+\usepackage[nopostdot, toc, nogroupskip, nomain, indexonlyfirst, acronym, symbols, style=long4col, stylemods={longextra}, nonumberlist, automake]{glossaries-extra}
 
 \makeglossaries
 
@@ -154,8 +157,15 @@
 
 \section{Signal processing theory}
 \subsection{FMCW-Doppler radar}
-The main 
+Explain fast and slow time / range and velocity determination. Range and velocity resolution.
 
+Is it worth including fig \ref{fig:Chirp}?
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{chirp}
+	\caption{Chirp (own work)}
+	\label{fig:Chirp}
+\end{figure}
 
 \begin{figure}
 	\centering
@@ -165,16 +175,21 @@ The main
 \end{figure}
 
 \subsection{Signal averaging}
+Explain with signal averaging we can get \(\sqrt{N}\) improvement in SNR, why that's necessary to detect clouds
+
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{sensitivity}
+	\includegraphics[width=0.6\textwidth]{sensitivity}
 	\caption{Radar sensitivity  (Own work).}
 	\label{fig:SlowFastTime}
 \end{figure}
 
 \subsection{Doppler moments}
+I wonder if it's worth removing this section since I didn't quite get Doppler moments working
 
 \section{Requirements}
+Explain current state of Mark I and Mark II software
+
 
 \begin{figure}
 	\centering
@@ -194,61 +209,149 @@ The main
 \subsection{Data acquisition}
 \subsubsection{Double buffering}
 To ensure real-time output, a double buffering approach is used.
-One buffer is used to store the incoming frame and another stores the previously acquired frame 
-While the next frame is being acquired, the most recent frame is processed.
+One buffer is used to store the incoming frame and another stores the most recently acquired frame.
+While the next frame is being acquired, the most recent frame is processed and displayed. The algorithm is shown in Alg. \ref{alg:DoubleBuffering}.
+
+\begin{algorithm}
+	\centering
+	\begin{algorithmic}
+		\State acquire frame asynchronously into buffer $A$
+		\While {keep acquiring data}
+		\State wait for previous acquisition to finish
+		\State acquire frame asynchronously into buffer $B$
+		\State process frame in buffer $A$
+		\State display processed frame
+		\State swap $A$ and $B$ pointers
+		\EndWhile
+	\end{algorithmic}
+	\caption{Double buffering approach.}\label{alg:DoubleBuffering}
+\end{algorithm}
 
 \subsubsection{Alternatives to double buffering}
-The approach in Mark II used one acquisition thread and one processing thread. The acquisition thread repeatedly acquires data and appends it to a thread-safe queue, which the processing thread pulls from
+The approach in Mark II used one acquisition thread and one processing thread. The acquisition thread repeatedly acquires and appends frames to a thread-safe queue, which the processing thread pulls from.
 
-The main issue with this approach is the acquisition thread wastes \acrshort{ac:cpu} time waiting for the frame to be acquired and transferred to memory
+The main issue with this approach is the acquisition thread wastes \acrshort{ac:cpu} time waiting for the frame to be acquired and transferred to memory.
 
+\begin{algorithm}
+	\begin{minipage}{0.48\linewidth}
+		\begin{algorithmic}
+			\While {keep acquiring data}
+			\State acquire frame into buffer
+			\State wait for previous acquisition to finish
+			\State copy into thread safe queue
+			\EndWhile
+		\end{algorithmic}
+	\end{minipage}
+	\begin{minipage}{0.48\linewidth}
+		\begin{algorithmic}
+			\While {keep acquiring data}
+			\State copy next frame in thread-safe queue
+			\State process frame
+			\State display processed frame
+			\EndWhile
+		\end{algorithmic}
+	\end{minipage}
+	\caption{Acquisition (left) and processing (right) threads.}\label{alg:TwoThreads}
+\end{algorithm}
 
-\subsubsection{Testing}
-To facilitate testing the software, a mock implementation of the \acrshort{ac:daq} was created. 
+The double buffering approach uses only two buffers, which avoids unnecessary copying of data between threads and the additional overhead of using a thread-safe queue.
 
 \subsection{FMCW-Doppler processing}
+The software uses a third-party library, \acrshort{ac:fftw} v3\cite{FFTWv3}, to ensure correctness and good performance in the two discrete Fourier transform steps in the FMCW-Doppler process.
+
+Newer versions of LabWindows CVI use \acrshort{ac:fftw} behind the scenes, however the interface is not as flexible. \acrshort{ac:fftw} supports multiple transforms of non-unit stride,\footnote{Stride is the number of memory locations between each successive element in an array.} allowing one to easily perform multiple transforms along different dimensions. This is particularly useful for the column-wise slow-time transform, because it means the data does not need to be transposed before transforming.
 
 
-\subsubsection{Testing}
+The window functions available in the new software are flat-top, Han, Blackman, and Blackman-Harris.
+
+\subsubsection{Averaging}
+In each frame, two averaging processes take place. Averaging of power spectra is done over each chirp. For a frame containing \(256\) \acrshort{ac:cpi}s each containing \(64\) chirps, this amounts to \(256 \times 64 = \)
+
+\subsection{Testing}
+To facilitate testing the software, a mock implementation of the \acrshort{ac:daq} was created. Raw data (\acrshort{ac:adc} integers) saved by the Mark II can be loaded by the mock implementation and used as if the data was just acquired. This feature is extremely useful for reproducible debugging and testing. A few snapshots of rain data were saved and used to test the new code when the weather was too clear.
+
+A signal generator was attached to the second input channel of the \acrshort{ac:daq} card. Checking to see if the input power matches the peak value in the fast-time power spectrum provides confirmation that any corrections or scaling performed during the fast-time processing is correct.
+
+Setting the input frequency to be slightly off bin centre introduces spectral leakage (Fig. \ref{fig:WindowNone}) Fig. \ref{fig:WindowBMH} shows the effect of applying the Blackman-Harris window is as expected.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{window-none}
+	\caption{Fast-time power spectrum without windowing.}
+	\label{fig:WindowNone}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{window-bmh}
+	\caption{Fast-time power spectrum with Blackman-Harris windowing.}
+	\label{fig:WindowBMH}
+\end{figure}
 
 \subsection{Averaging}
-\subsection{Doppler moments}
+How is averaging implemented? Not much to say here really
 
 \section{Results}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{working-cloud}
+	\includegraphics[width=0.4\textwidth]{working-cloud_range-doppler}
 	\caption{Screenshot of the new user interface.}
-	\label{fig:WorkingCloud}
+	\label{fig:WorkingCloudRangeDoppler}
 \end{figure}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{working-hail}
-	\caption{Screenshot of the new user interface, showing hail.}
-	\label{fig:WorkingHail}
+	\includegraphics[width=\textwidth]{working-cloud_power-spect}
+	\caption{Screenshot of the new user interface.}
+	\label{fig:WorkingCloudPowerSpectrum}
 \end{figure}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{working-heavy-rain-snow}
-	\caption{Screenshot of the new user interface, showing heavy rain and/or sleet.}
-	\label{fig:WorkingHeavyRainSnow}
+	\includegraphics[width=0.4\textwidth]{working-hail_range-doppler}
+	\caption{Screenshot of the new user interface.}
+	\label{fig:WorkingHailRangeDoppler}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{working-hail_power-spect}
+	\caption{Screenshot of the new user interface.}
+	\label{fig:WorkingHailPowerSpectrum}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.4\textwidth]{working-heavy-rain-sleet_range-doppler}
+	\caption{Screenshot of the new user interface.}
+	\label{fig:WorkingHeavyRainSnowRangeDoppler}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{working-heavy-rain-sleet_power-spect}
+	\caption{Screenshot of the new user interface.}
+	\label{fig:WorkingHeavyRainSnowPowerSpectrum}
 \end{figure}
 
 \subsection{Performance}
 Compare processing time of previous software
 
 \section{Future work}
+\subsection{Doppler moments}
+Extracting the Doppler spectrum from the averaged range-Doppler data has already been implemented along with UI controls for displaying Doppler moments, however the formulas used for determining the moments are incorrect.
+
 \subsection{Effect of ambient temperature}
 \subsection{NetCDF}
 
 \subsection{Performance improvements}
 \subsubsection{Multithreading}
-\subsubsection{OpenMP}
+An easy way of using multithreading is \acrshort{ac:openmp}
+[Briefly mention how OpenMP can be used to parallelise loops]
+
 \subsubsection{SIMD}
-Single instruction, multiple data (SIMD) is another type of parallel processing that 
+Single instruction, multiple data (SIMD) is another type of parallel processing where a single instruction operates simultaneously on multiple pieces of data. \acrshort{ac:fftw} uses this extensively. Many of the steps in the FMCW-Doppler process are adding or multiplying rows or columns by the same constants which makes \acrshort{ac:simd} ...
 
 \section{Conclusions}
 

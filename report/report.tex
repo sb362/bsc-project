@@ -156,6 +156,19 @@
 	{\large\today\par}
 \end{titlepage}
 
+Science is often highly collaborative. Please clarify here which parts of the work reported have been done by you and which parts include the work of others.
+
+For example, this might include provision of simulation or analysis codes which you utilised or modified, provision of experimental data to analyse, collaborations wit others in performing new measurements, if you built up things from scratch in your project or started from pre-existing setups, and others. Providing this information helps clarify the scope and focus of your project work.
+
+\begin{itemize}
+	\item Mark I code was supplied by Dr Duncan Robertson.
+	\item Mark II code was developed by Dr Samiur Rahman.
+	\item New code is a complete rewrite from scratch.
+\end{itemize}
+
+\clearpage
+\setcounter{page}{1}
+
 \begin{abstract}
 	Insert abstract here.
 \end{abstract}
@@ -180,7 +193,7 @@ In practice, there are many received signals, thus one performs a discrete Fouri
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{chirp}
-	\caption{Left: transmitted (TX) and received (RX) sawtooth chirps and their difference frequency (IF). Right: illustration of TX chirp waveform. (Own work)}
+	\caption{Left: transmitted (TX) and received (RX) sawtooth chirps and the intermediate frequency (\acrshort{ac:if}). Right: illustration of TX chirp waveform. (Own work)}
 	\label{fig:Chirp}
 \end{figure}
 
@@ -206,6 +219,8 @@ where \(T_f\) is the \acrshort{ac:cpi} duration.
 Each \acrshort{ac:cpi} can be thought of as a matrix where each row represents the fast-time samples. The fast-time \acrshort{ac:fft}s are performed row-by-row to get several range profiles and, afterwards, the slow-time \acrshort{ac:fft}s are performed column-by-column to obtain the velocity spectra.
 
 \subsection{Signal averaging}
+In this context, a \textit{frame} is a sequence of \acrshort{ac:cpi}s to be averaged together. 
+
 Explain with signal averaging we can get \(\sqrt{N}\) improvement in SNR, why that's necessary to detect clouds
 
 \begin{figure}
@@ -219,13 +234,34 @@ Explain with signal averaging we can get \(\sqrt{N}\) improvement in SNR, why th
 Statistical properties of the velocity spectrum are of great interest to meteorologists. In particular, the mean, variance, skew, and kurtosis ...
 
 \section{Requirements}
+\subsection{Current state of radar software}
 There are two software implementations to date, named Mark I and Mark II.
+
 Mark I 
 
-Mark II supports real-time data acquisition (see Sec. \ref{sc:AltToDblBuf}) and saving of raw data (\acrshort{ac:adc} integers) to disk, however does not perform any processing beyond a range-Doppler plot for each \acrshort{ac:cpi}. 
+
+Mark II supports real-time data acquisition (see Sec. \ref{sc:AltToDblBuf}) and saving of raw data (\acrshort{ac:adc} integers) to disk, however does not perform any processing beyond a range-Doppler plot for each \acrshort{ac:cpi}. While the data acquisition is real-time, it is not continuous.
 
 \subsection{User interface and hardware control}
 It should also be noted that these implementations exclusively deal with the data acquisition and processing aspect of radar software. The hardware control runs in a separate process. One of the extra project goals is to add a hardware control panel containing controls for bandwidth, chirp or continuous wave mode, transmitter on/off as well as output from various sensors. The panel could be switched between engineering and operational mode, where operational mode hides low-level controls and replaces them with more intuitive controls, such as range resolution instead of bandwidth. The panel would also contain controls for adjusting averaging time and velocity resolution.
+
+\subsection{Project goals}
+The main project goals are:
+\paragraph{Continuous real-time processing.} Ensure no frames are dropped and the processing is real-time.
+
+\paragraph{User interface} Combine hardware control and sensors into new code. Implement two different modes of display: operational (range and velocity resolution, etc.) and engineering (bandwidth, etc.). Add plot showing reflectivity as a function of range and time.
+
+\paragraph{Signal averaging.} Implement averaging of power spectra and range-Doppler data to significantly improve sensitivity to clouds.
+
+\paragraph{Doppler moments.} Display velocity spectrum for a particular range bin and calculate its moments.
+
+\paragraph{Calibration.} Convert output from \(\si{\deci\belm}\) to \(\si{\deci\belz}\).
+
+\paragraph{Effect of ambient temperature.} Sensors inside the radar enclosure can record the temperature. Record temperature over a long period of time and correlate to radar performance.
+
+\paragraph{Cross-check results with a disdrometer.} Use adjacent disdrometer to record the drop-size distribution while raining. The reflectivity can then be calculated and compared to the radar output.
+
+
 
 \begin{figure}
 	\centering
@@ -293,11 +329,9 @@ The main issue with this approach is the acquisition thread wastes \acrshort{ac:
 The double buffering approach uses only two buffers, which avoids unnecessary copying of data between threads and the additional overhead of using a thread-safe queue.
 
 \subsection{FMCW-Doppler processing}
-The software uses a third-party library, \acrshort{ac:fftw} v3\cite{FFTWv3}, for the two discrete Fourier transform steps in the FMCW-Doppler process.
+The software uses a third-party library, \acrshort{ac:fftw} v3 (\cite{FFTWv3}), for the two discrete Fourier transform steps in the FMCW-Doppler process.
 
-Newer versions of LabWindows \acrshort{ac:cvi} use \acrshort{ac:fftw} behind the scenes, however the interface is not as flexible. \acrshort{ac:fftw} supports multiple transforms of non-unit stride,\footnote{Stride is the number of memory locations between each successive element in an array.} allowing one to easily perform multiple transforms along different dimensions. This is particularly useful for the column-wise slow-time transform, because it means the data does not need to be transposed before transforming. In \acrshort{ac:cvi}, the \acrshort{ac:fft} routines are limited to a single contiguous 1D array at a time. 
-
-In \acrshort{ac:fftw}, \textit{plans} are created 
+Newer versions of LabWindows \acrshort{ac:cvi} use \acrshort{ac:fftw} behind the scenes, however the interface is not as flexible. \acrshort{ac:fftw} supports multiple transforms of non-unit stride,\footnote{Stride is the number of memory locations between each successive element in an array.} allowing one to easily perform multiple transforms along different dimensions. This is particularly useful for the column-wise slow-time transform, because it means the data does not need to be transposed before transforming. In \acrshort{ac:cvi}, the \acrshort{ac:fft} routines are limited to a single contiguous 1D array at a time.
 
 The window functions available in the new software are flat-top, Hann, Blackman, and Blackman-Harris.
 

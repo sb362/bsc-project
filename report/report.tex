@@ -122,6 +122,7 @@
 \newacronym{ac:cvi}{CVI}{C for Virtual Instrumentation, an ANSI C environment designed by National Instruments.}
 \newacronym{ac:fft}{FFT}{Fast Fourier transform}
 \newacronym{ac:vla}{VLA}{Variable length array}
+\newacronym{ac:dc}{DC}{Direct current (zero frequency)}
 
 \newglossaryentry{gl:fast-time}
 {
@@ -135,7 +136,7 @@
 	description={On the time scale of multiple chirps}
 }
 
-\glsaddall
+%\glsaddall
 
 \begin{document}
 
@@ -151,7 +152,7 @@
 	\vspace{2cm}
 	{\Large\myauthor\par}
 	{\large\textbf{Module:} \mymodule\par}
-	{\large\textbf{Word count:} \mywordcount\par}
+%	{\large\textbf{Word count:} \mywordcount\par}
 	\vfill
 	{\large\today\par}
 \end{titlepage}
@@ -166,11 +167,12 @@ For example, this might include provision of simulation or analysis codes which 
 	\item New code is a complete rewrite from scratch.
 \end{itemize}
 
+\thispagestyle{empty}
 \clearpage
 \setcounter{page}{1}
 
 \begin{abstract}
-	Insert abstract here.
+	This report details recent upgrades to the cloud profiling radar software, including continuous real-time data acquisition, signal averaging, and extraction of statistical properties from the velocity spectrum. Performance is compared to two previous implementations.
 \end{abstract}
 
 \tableofcontents
@@ -178,8 +180,8 @@ For example, this might include provision of simulation or analysis codes which 
 \printglossary
 
 \section{Introduction}
-
-\footnote{The code is available on GitHub.\supercite{Code}}
+The current cloud profiling radar code is of limited usefulness to meteorologists due to low sensitivity of clouds, lack of continuous real-time display, 
+This report details the implementation of these new features and the construction of new, modular design to the cloud profiling radar software.\footnote{The code is available on GitHub.\supercite{Code}}
 
 \section{Signal processing theory}
 \subsection{FMCW-Doppler radar}
@@ -204,7 +206,7 @@ In practice, there are many received signals, thus one performs a discrete Fouri
 	\label{fig:RadarDiagram}
 \end{figure}
 
-To obtain velocity information one extracts the phase change in each range bin across multiple consecutive chirps by performing a Doppler-\acrshort{ac:fft} or \textit{slow time} \acrshort{ac:fft}.
+To obtain velocity information one extracts the phase change in each range bin across multiple consecutive chirps by performing a Doppler-\acrshort{ac:fft} or \textit{slow time} \acrshort{ac:fft}.\supercite{POMRDopplerProcessing}
 The phase difference \(\delta\) relates to the target velocity \(v\) by\supercite{TIFMCWDoppler}
 \begin{equation}
 	\delta = \frac{4 \pi v T_c}{\lambda}.
@@ -219,28 +221,18 @@ where \(T_f\) is the \acrshort{ac:cpi} duration.
 Each \acrshort{ac:cpi} can be thought of as a matrix where each row represents the fast-time samples. The fast-time \acrshort{ac:fft}s are performed row-by-row to get several range profiles and, afterwards, the slow-time \acrshort{ac:fft}s are performed column-by-column to obtain the velocity spectra.
 
 \subsection{Signal averaging}
-In this context, a \textit{frame} is a sequence of \acrshort{ac:cpi}s to be averaged together. 
-
-Explain with signal averaging we can get \(\sqrt{N}\) improvement in SNR, why that's necessary to detect clouds
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.6\textwidth]{sensitivity}
-	\caption{Radar sensitivity (Own work).}
-	\label{fig:Sensitivity}
-\end{figure}
+In this context, a \textit{frame} is a sequence of \acrshort{ac:cpi}s to be averaged together. Non-coherent averaging will increase the signal-to-noise ratio (\acrshort{ac:snr}) and hence improve sensitivity to clouds.\supercite{POMRNonCoherentAveraging}
 
 \subsection{Doppler moments}
-Statistical properties of the velocity spectrum are of great interest to meteorologists. In particular, the mean, variance, skew, and kurtosis ...
+Statistical properties of the velocity spectrum are of great interest to meteorologists.
 
 \section{Requirements}
 \subsection{Current state of radar software}
 There are two software implementations to date, named Mark I and Mark II.
 
-Mark I 
+Mark I does not support real-time data acquisition and its processing is limited to an unaveraged power spectrum and range-Doppler plot.
 
-
-Mark II supports real-time data acquisition (see Sec. \ref{sc:AltToDblBuf}) and saving of raw data (\acrshort{ac:adc} integers) to disk, however does not perform any processing beyond a range-Doppler plot for each \acrshort{ac:cpi}. While the data acquisition is real-time, it is not continuous.
+Mark II supports real-time data acquisition (see Sec. \ref{sc:AltToDblBuf}) and continuous streaming of raw data (\acrshort{ac:adc} integers) to disk, however does not perform any processing beyond a range-Doppler plot for each \acrshort{ac:cpi}.
 
 \subsection{User interface and hardware control}
 It should also be noted that these implementations exclusively deal with the data acquisition and processing aspect of radar software. The hardware control runs in a separate process. One of the extra project goals is to add a hardware control panel containing controls for bandwidth, chirp or continuous wave mode, transmitter on/off as well as output from various sensors. The panel could be switched between engineering and operational mode, where operational mode hides low-level controls and replaces them with more intuitive controls, such as range resolution instead of bandwidth. The panel would also contain controls for adjusting averaging time and velocity resolution.
@@ -260,8 +252,6 @@ The main project goals are:
 \paragraph{Effect of ambient temperature.} Sensors inside the radar enclosure can record the temperature. Record temperature over a long period of time and correlate to radar performance.
 
 \paragraph{Cross-check results with a disdrometer.} Use adjacent disdrometer to record the drop-size distribution while raining. The reflectivity can then be calculated and compared to the radar output.
-
-
 
 \begin{figure}
 	\centering
@@ -333,6 +323,43 @@ The software uses a third-party library, \acrshort{ac:fftw} v3 (\cite{FFTWv3}), 
 
 Newer versions of LabWindows \acrshort{ac:cvi} use \acrshort{ac:fftw} behind the scenes, however the interface is not as flexible. \acrshort{ac:fftw} supports multiple transforms of non-unit stride,\footnote{Stride is the number of memory locations between each successive element in an array.} allowing one to easily perform multiple transforms along different dimensions. This is particularly useful for the column-wise slow-time transform, because it means the data does not need to be transposed before transforming. In \acrshort{ac:cvi}, the \acrshort{ac:fft} routines are limited to a single contiguous 1D array at a time.
 
+\begin{algorithm}
+	\centering
+	\begin{algorithmic}
+		\For{each \acrshort{ac:cpi} in the frame}
+		\State copy \acrshort{ac:adc} integers (uint16) into buffer (float64)
+		\For{each chirp}
+		\State apply fast-time windowing to chirp samples
+		\EndFor
+		\State execute fast-time \acrshort{ac:fft}
+		\For{each chirp}
+		\For{each range bin in chirp}
+		\State calculate \acrshort{ac:fft} magnitude
+		\State convert to logarithmic scale
+		\State apply fast-time corrections
+		\State apply fast-time windowing correction and \acrshort{ac:fft} normalisation
+		\EndFor
+		\EndFor
+		\For{each column}
+		\State apply slow-time windowing to each range bin
+		\EndFor
+		\State execute slow-time \acrshort{ac:fft}
+		\For{each chirp}
+		\For{each range bin in chirp}
+		\State calculate \acrshort{ac:fft} magnitude
+		\State convert to logarithmic scale
+		\State apply fast-time corrections
+		\State apply slow-time windowing correction and \acrshort{ac:fft} normalisation
+		\State transpose array index and shift so spectrum is centred about DC
+		\EndFor
+		\EndFor
+		\State display processed frame
+		\State swap $A$ and $B$ pointers
+		\EndFor
+	\end{algorithmic}
+	\caption{Key steps in \acrshort{ac:fmcw}-Doppler process.}\label{alg:FMCWProc}
+\end{algorithm}
+
 The window functions available in the new software are flat-top, Hann, Blackman, and Blackman-Harris.
 
 \subsubsection{Averaging}
@@ -345,64 +372,54 @@ A signal generator was attached to the second input channel of the \acrshort{ac:
 
 Setting the input frequency to be slightly off bin centre introduces spectral leakage (Fig. \ref{fig:WindowNone}) Fig. \ref{fig:WindowBMH} shows the effect of applying the Blackman-Harris window is as expected.
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{window-none}
-	\caption{Fast-time power spectrum without windowing.}
+	\caption{Averaged fast-time power spectrum of sine wave without windowing. Spectral leakage is noticeable at the peak near the \(200\)th range bin. The leakage masks aliases from the signal generator. Note that the x-axis label is incorrect: it should be the range bin number.}
 	\label{fig:WindowNone}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{window-bmh}
-	\caption{Fast-time power spectrum with Blackman-Harris windowing.}
+	\caption{Averaged fast-time power spectrum of sine wave with Blackman-Harris windowing applied. Spectral leakage is greatly reduced and aliases from the signal generator are no longer obscured. Note that the x-axis label is incorrect: it should be the range bin number.}
 	\label{fig:WindowBMH}
 \end{figure}
 
-\subsection{Averaging}
-How is averaging implemented? Not much to say here really
-
 \section{Results}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.4\textwidth]{working-cloud_range-doppler}
-	\caption{Screenshot of the new user interface.}
+	\caption{Range-Doppler plot showing a cloud and some precipitation. Averaging over \(5\) seconds and Blackman-Harris windowing was applied. A hardware issue is visible as a mysterious staircase pattern.}
 	\label{fig:WorkingCloudRangeDoppler}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{working-cloud_power-spect}
-	\caption{Screenshot of the new user interface.}
+	\caption{Averaged power spectrum of data in \ref{fig:WorkingCloudRangeDoppler}. Two small bumps are visible near the \(10\)th and \(95\)th range bins. A hardware issue is visible as a series of spikes.}
 	\label{fig:WorkingCloudPowerSpectrum}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
-	\includegraphics[width=0.4\textwidth]{working-hail_range-doppler}
-	\caption{Screenshot of the new user interface.}
-	\label{fig:WorkingHailRangeDoppler}
+	\includegraphics[width=\textwidth]{working-cloud_power-spect-unavg}
+	\caption{Unaveraged power spectrum of data in \ref{fig:WorkingCloudRangeDoppler}.}
+	\label{fig:WorkingCloudPowerSpectrumUnaveraged}
 \end{figure}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=\textwidth]{working-hail_power-spect}
-	\caption{Screenshot of the new user interface.}
-	\label{fig:WorkingHailPowerSpectrum}
-\end{figure}
-
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.4\textwidth]{working-heavy-rain-sleet_range-doppler}
-	\caption{Screenshot of the new user interface.}
+	\caption{Range-Doppler plot from the new user interface showing heavy rain. Averaging time is \(5\) seconds and Blackman-Harris windowing has been applied. Some \acrshort{ac:dc} noise is visible at zero range and zero velocity (bin number \(31\)).}
 	\label{fig:WorkingHeavyRainSnowRangeDoppler}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{working-heavy-rain-sleet_power-spect}
-	\caption{Screenshot of the new user interface.}
+	\caption{Averaged range profile for the same data in Fig. \ref{fig:WorkingHeavyRainSnowRangeDoppler}. The rain is visible as a large bulge between range bins \(1\) and \(150\).}
 	\label{fig:WorkingHeavyRainSnowPowerSpectrum}
 \end{figure}
 
@@ -429,28 +446,25 @@ Both the Mark I and Mark II frequently copy data into temporary arrays while pro
 In addition, these temporary arrays are variable-length (\acrshort{ac:vla}s) which are generally slower than arrays with a size known at compile-time or dynamically allocated arrays.
 The new code leverages \acrshort{ac:fftw}'s advanced interface to \acrshort{ac:fft} the entire 2D \acrshort{ac:cpi} array in one go. Since \acrshort{ac:fftw} knows the dimensions of the input it might be using optimisations suited for multidimensional transforms.
 
-\section{Future work}
-\subsection{Calibration}
+\section{Conclusions}
+\subsection{Future work}
+\subsubsection{Calibration}
 Currently the output power is in \(\si{\deci\belm}\) rather than \(\si{\deci\belz}\). Since the conversion to \(\si{\deci\belz}\) is dependent on bandwidth and the hardware control was not fully implemented, it was decided to not convert to \(\si{\deci\belz}\) yet.
 
-\subsection{Doppler moments}
+\subsubsection{Doppler moments}
 Extracting the Doppler spectrum from the averaged range-Doppler data has already been implemented along with UI controls for displaying Doppler moments, however the results are wildly incorrect. 
 
-the formulas used for determining the moments are incorrect.
+\subsubsection{Performance improvements}
+\paragraph{Multithreading.} Many of the calculations in the \acrshort{ac:fmcw}-Doppler process are performed on large arrays. Splitting the workload across multiple threads would greatly improve throughput. An easy way of parallelising loops with is to use \acrshort{ac:openmp}.
 
-\subsection{Effect of ambient temperature}
-\subsection{NetCDF}
+\paragraph{Single instruction, multiple data} (\acrshort{ac:simd}) is another type of parallel processing where a single instruction operates simultaneously on multiple pieces of data. \acrshort{ac:fftw} uses this extensively. Many of the steps in the \acrshort{ac:fmcw}-Doppler process are adding or multiplying rows or columns by the same constants which makes \acrshort{ac:simd} highly effective.
 
-\subsection{Performance improvements}
-\subsubsection{Multithreading}
-Many of the calculations in the \acrshort{ac:fmcw}-Doppler process are highly parallel and are performed on large 
+\subsection{Adapt code for other radars}
+Both the Mark I and Mark II code exist as a single source file and are heavily tied to \acrshort{ac:cvi} and \acrshort{ac:daq} card library. The new code was built with portability and modularity in mind, so each component (data acquisition, \acrshort{ac:fmcw} processing, user interface) is split into its own source file. Only the user interface module depends on \acrshort{ac:cvi}.
 
-An easy way of parallelising loops with is to use \acrshort{ac:openmp}
 
-\subsubsection{SIMD}
-Single instruction, multiple data (\acrshort{ac:simd}) is another type of parallel processing where a single instruction operates simultaneously on multiple pieces of data. \acrshort{ac:fftw} uses this extensively. Many of the steps in the \acrshort{ac:fmcw}-Doppler process are adding or multiplying rows or columns by the same constants which makes \acrshort{ac:simd} highly effective.
+The two biggest features were successfully implemented: continuous real-time data acquisition and signal averaging. Progress was made towards extraction of Doppler moments, however some debugging is required. The modular design will allow for easier addition of features and for it to be adapted to other radars. The performance improvements mean the code could be used for radars that require fast response times such as drone detection.
 
-\section{Conclusions}
 
 \clearpage
 \printbibliography
